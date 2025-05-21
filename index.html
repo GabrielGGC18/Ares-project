@@ -50,6 +50,7 @@
             text-align: center;
             z-index: 2;
             position: relative;
+            
         }
         .hero-logo-img {
             width: 320px;
@@ -59,6 +60,9 @@
             filter: drop-shadow(0 0 18px #FF0000cc);
             border-radius: 16px;
             animation: floatHelmet 3s ease-in-out infinite alternate;
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55), filter 0.4s;
+            cursor: pointer;
+            
         }
         @keyframes floatHelmet {
             0% { transform: translateY(0);}
@@ -239,6 +243,16 @@
             .about-img { order: -1; }
             .hero-logo-img { width: 90vw; }
         }
+
+        /* Interatividade: animação ao passar o mouse na logo do header */
+        .logo img {
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55), filter 0.4s;
+            cursor: pointer;
+        }
+        .logo img:hover {
+            transform: rotate(-10deg) scale(1.12);
+            filter: drop-shadow(0 0 18px #FF0000cc) saturate(2);
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -369,7 +383,7 @@
             <a href="#contato" class="btn" style="margin-top: 20px;">Saiba Mais</a>
         </div>
         <div class="about-img">
-            <img src="img/ares-helmet-bg.jpg" alt="Equipe Áres">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Equipe Áres">
         </div>
     </section>
 
@@ -522,7 +536,7 @@
 
     <footer>
         <div class="footer-logo">
-            <img src="img/ares-helmet-bg.jpg" alt="Capacete Espartano" style="height:38px;filter: drop-shadow(0 0 0 #FF0000) saturate(2);">
+            <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/spartan.svg" alt="Capacete Espartano" style="height:38px;filter: drop-shadow(0 0 0 #FF0000) saturate(2);">
             <h1>Á<span>res</span></h1>
         </div>
         <div class="footer-links">
