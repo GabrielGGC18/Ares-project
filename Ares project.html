@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Áres Car Sales - Dinâmico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <style>
+        :root {
+            --primary: rgba(10,10,10,0.92);
+            --accent: #FF0000;
+            --accent2: #00ffd0;
+            --card-bg: rgba(255,255,255,0.92);
+            --card-glass: rgba(255,255,255,0.18);
+            --shadow: 0 8px 32px rgba(0,0,0,0.18);
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Montserrat', Arial, sans-serif;
+            background: url('https://raw.githubusercontent.com/aresdevbr/assets/main/ares-helmet-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: #fff;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(120deg, rgba(0,0,0,0.85) 60%, rgba(255,0,0,0.18) 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        header {
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            padding: 18px 0 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            letter-spacing: 2px;
+        }
+        .logo-ares {
+            width: 70px;
+            vertical-align: middle;
+            margin-right: 16px;
+            filter: drop-shadow(0 0 12px #FF0000cc);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.3em;
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+            letter-spacing: 3px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            color: var(--accent2);
+            margin-top: 4px;
+            letter-spacing: 1.5px;
+        }
+        nav {
+            margin-top: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 500;
+            font-size: 1.08em;
+            transition: color 0.2s;
+            position: relative;
+        }
+        nav a:hover, nav a.active {
+            color: var(--accent);
+        }
+        nav a.active::after, nav a:hover::after {
+            content: '';
+            display: block;
+            margin: 0 auto;
+            width: 60%;
+            border-bottom: 2px solid var(--accent);
+        }
+        .moving-banner {
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+            background: linear-gradient(90deg, var(--accent) 60%, #222 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 32px 32px;
+            box-shadow: var(--shadow);
+        }
+        .banner-content {
+            position: absolute;
+            white-space: nowrap;
+            animation: moveBanner 12s linear infinite;
+            font-size: 2em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #0008;
+        }
+        @keyframes moveBanner {
+            0% { transform: translateX(100%);}
+            100% { transform: translateX(-100%);}
+        }
+        .container {
+            width: 95%;
+            margin: 30px auto 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .filters select, .filters input {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1.5px solid var(--accent2);
+            font-size: 1em;
+            background: #fff;
+            color: #222;
+            outline: none;
+        }
+        .filters input[type="text"] {
+            min-width: 180px;
+        }
+        .car-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 32px;
+        }
+        .car-item {
+            background: var(--card-glass);
+            border: 1.5px solid rgba(255,255,255,0.13);
+            border-radius: 18px;
+            margin: 10px;
+            padding: 18px 18px 16px 18px;
+            flex: 1 1 320px;
+            min-width: 280px;
+            max-width: 350px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            transition: transform 0.25s, box-shadow 0.25s, border 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+        }
+        .car-item:hover {
+            transform: scale(1.045) rotate(-1deg);
+            box-shadow: 0 12px 32px #ff000055;
+            border: 2.5px solid var(--accent2);
+            z-index: 2;
+        }
+        .car-img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 12px #0005;
+            transition: box-shadow 0.3s;
+            cursor: pointer;
+            background: #222;
+        }
+        .car-title {
+            font-size: 1.18em;
+            font-weight: bold;
+            margin: 8px 0 4px 0;
+            color: var(--accent2);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .car-desc {
+            color: #fff;
+            font-size: 1em;
+            margin-bottom: 8px;
+            text-align: center;
+            opacity: 0.93;
+        }
+        .car-price {
+            font-size: 0.5.15em;
+            color: #FF9900;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+        }
+        .car-oldprice {
+            text-decoration:line-through;
+            color:#fff;
+            font-size:0.9em;
+        }
+        .buy-btn {
+            background: linear-gradient(90deg, var(--accent) 60%, var(--accent2) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-size: 1.08em;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            margin-top: auto;
+            font-weight: 600;
+            box-shadow: 0 2px 8px #0004;
+        }
+        .buy-btn:hover {
+            background: linear-gradient(90deg, var(--accent2) 60%, var(--accent) 100%);
+            transform: scale(1.09);
+            box-shadow: 0 8px 24px #00ffd055;
+        }
+        .compare-btn {
+            background: #fff;
+            color: var(--accent);
+            border: 1.5px solid var(--accent2);
+            border-radius: 8px;
+            padding: 6px 18px;
+            font-size: 0.98em;
+            cursor: pointer;
+            margin-bottom: 8px;
+            margin-top: 2px;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s, border 0.2s;
+        }
+        .compare-btn:hover {
+            background: var(--accent2);
+            color: #fff;
+            border: 1.5px solid #fff;
+        }
+        .car-360-btn {
+            background: #fff;
+            color: var(--accent);
+            border: 1.5px solid var(--accent2);
+            border-radius: 8px;
+            padding: 6px 18px;
+            font-size: 0.98em;
+            cursor: pointer;
+            margin-bottom: 8px;
+            margin-top: 2px;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s, border 0.2s;
+        }
+        .car-360-btn:hover {
+            background: var(--accent2);
+            color: #fff;
+            border: 1.5px solid #fff;
+        }
+        .compare-list {
+            background: var(--card-bg);
+            color: #222;
+            border-radius: 12px;
+            padding: 18px 12px;
+            margin: 18px auto 0 auto;
+            max-width: 900px;
+            box-shadow: var(--shadow);
+            font-size: 1.08em;
+        }
+        .compare-list h3 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+        .compare-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+        .compare-list li {
+            background: #eee;
+            color: #222;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin-bottom: 8px;
+        }
+        .compare-list .remove-btn {
+            background: none;
+            color: var(--accent);
+            border: none;
+            font-size: 1.1em;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        .modal-bg {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-bg.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 36px 24px 28px 24px;
+            max-width: 370px;
+            width: 92vw;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            color: #222;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .modal h2 {
+            color: var(--accent);
+            margin-bottom: 18px;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .modal input, .modal select {
+            width: 92%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #f7f7f7;
+        }
+        .modal button {
+            background: linear-gradient(90deg, var(--accent) 60%, var(--accent2) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .modal .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 14px;
+            background: none;
+            color: #333;
+            font-size: 1.3em;
+            border: none;
+            cursor: pointer;
+        }
+        .modal .close-btn:hover {
+            color: var(--accent);
+        }
+        .modal .success-msg {
+            color: #28a745;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .modal-360-bg {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.92);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-360-bg.active {
+            display: flex;
+        }
+        .modal-360 {
+            background: #111;
+            border-radius: 18px;
+            padding: 18px 10px 10px 10px;
+            max-width: 98vw;
+            max-height: 98vh;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+        }
+        .modal-360 .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 18px;
+            background: none;
+            color: #fff;
+            font-size: 1.5em;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-360 img {
+            max-width: 90vw;
+            max-height: 70vh;
+            border-radius: 12px;
+            background: #222;
+        }
+        .modal-360 .caption {
+            color: var(--accent2);
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+        footer {
+            margin-top: 60px;
+            padding: 30px 0 18px 0;
+            text-align: center;
+            color: #fff;
+            background: rgba(0,0,0,0.7);
+            border-radius: 32px 32px 0 0;
+            font-size: 1.08em;
+            letter-spacing: 1px;
+            box-shadow: var(--shadow);
+        }
+        .footer-logo {
+            width: 48px;
+            vertical-align: middle;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 8px #FF0000cc);
+        }
+        .footer-brand {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--accent2);
+            vertical-align: middle;
+        }
+        @media (max-width: 900px) {
+            .car-list {
+                flex-direction: column;
+                align-items: center;
+            }
+            .car-item {
+                min-width: 220px;
+                max-width: 98vw;
+            }
+            .container {
+                width: 98%;
+            }
+        }
+        @media (max-width: 600px) {
+            .moving-banner { font-size: 1em; height: 120px;}
+            .banner-content { font-size: 1.1em;}
+            .car-img { height: 120px;}
+            .modal { padding: 18px 4vw;}
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="img/ares-helmet-bg.jpg" class="logo-ares" alt="Áres Logo">
+        <h1>Áres Car Sales</h1>
+        <div class="subtitle">Design, inovação e os melhores carros para você</div>
+        <nav>
+            <a href="#carros" class="active">Carros</a>
+            <a href="#sobre">Sobre</a>
+            <a href="projeto ares devx.html">Home</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#tecnologias">Tecnologias</a>
+            <a href="Contato.html">Contato</a>
+        </nav>
+    </header>
+
+    <div class="moving-banner">
+        <div class="banner-content">
+            🚗 Promoção especial: Taxa zero, IPVA grátis e design exclusivo Áres! Confira nossos modelos em destaque! 🚗
+        </div>
+    </div>
+
+    <div class="container" id="carros">
+        <div class="filters">
+            <select id="brandFilter">
+                <option value="">Todas as marcas</option>
+            </select>
+            <select id="priceFilter">
+                <option value="">Todos os preços</option>
+                <option value="70000">Até R$ 70.000</option>
+                <option value="90000">Até R$ 90.000</option>
+                <option value="120000">Até R$ 120.000</option>
+                <option value="150000">Até R$ 150.000</option>
+                <option value="200000">Até R$ 200.000</option>
+                <option value="999999">Acima de R$ 200.000</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Buscar modelo...">
+        </div>
+        <div class="compare-list" id="compareList" style="display:none;">
+            <h3>Comparação de carros</h3>
+            <ul id="compareUl"></ul>
+        </div>
+        <div class="car-list" id="carList">
+            <!-- Carros serão inseridos via JS -->
+        </div>
+    </div>
+
+    <!-- Modal de Compra -->
+    <div class="modal-bg" id="modalBg">
+        <div class="modal">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2>Comprar Carro</h2>
+            <form id="buyForm">
+                <input type="text" id="nome" placeholder="Seu nome" required>
+                <input type="tel" id="telefone" placeholder="Telefone/WhatsApp" required>
+                <select id="carroEscolhido" required>
+                    <option value="">Selecione o carro</option>
+                </select>
+                <button type="submit">Enviar Pedido</button>
+                <div class="success-msg" id="successMsg" style="display:none;">
+                    Pedido enviado! Entraremos em contato pelo WhatsApp.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 360 -->
+    <div class="modal-360-bg" id="modal360Bg">
+        <div class="modal-360">
+            <button class="close-btn" onclick="closeModal360()">&times;</button>
+            <img id="img360" src="" alt="Foto 360 do carro">
+            <div class="caption" id="caption360"></div>
+        </div>
+    </div>
+
+    <footer>
+        <img src="img/ares-helmet-bg.jpg" class="footer-logo" alt="Áres Logo">
+        <span class="footer-brand">Áres Car Sales</span> &copy; 2025 &mdash; Design e inovação sobre rodas.
+    </footer>
+
+    <script>
+        // Carros reais com preços e fotos reais (dados de mercado 2024)
+        const cars = [
+            {
+                brand: "CHEVROLET",
+                name: "ONIX LT 1.0",
+                km: "44.995",
+                year: "2023/2024",
+                transmission: "MANUAL",
+                oldPrice: "R$ 74.190",
+                price: "R$ 69.990",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/2024.png",
+                img360: "img/Onix lt1.0 2023/2024.png"
+            },
+            {
+                brand: "CHEVROLET",
+                name: "ONIX PLUS LTZ 1.0",
+                km: "41.018",
+                year: "2023/2024",
+                transmission: "AUTOMÁT.",
+                oldPrice: "R$ 90.590",
+                price: "R$ 84.990",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/Onix plus.png",
+                img360: "img/Onix lt1.0 2023/Onix plus.png"
+            },
+            {
+                brand: "FIAT",
+                name: "ARGO DRIVE 1.0",
+                km: "50.605",
+                year: "2023/2024",
+                transmission: "MANUAL",
+                oldPrice: "R$ 72.690",
+                price: "R$ 69.990",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/Fiat Argo.png",
+                img360: "img/Onix lt1.0 2023/Fiat Argo.png"
+            },
+            {
+                brand: "JEEP",
+                name: "RENEGADE LONGITUDE 1.3",
+                km: "47.297",
+                year: "2023/2024",
+                transmission: "AUTOMÁT.",
+                oldPrice: "R$ 114.890",
+                price: "R$ 112.990",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/jeep Renegade.png",
+                img360: "img/Onix lt1.0 2023/jeep Renegade.png"
+            },
+            {
+                brand: "FIAT",
+                name: "CRONOS DRIVE 1.0",
+                km: "46.035",
+                year: "2023/2024",
+                transmission: "MANUAL",
+                oldPrice: "R$ 80.990",
+                price: "R$ 76.490",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/Fiat Cronos Drive.png",
+                img360: "img/Onix lt1.0 2023/Fiat Cronos Drive.png"
+            },
+            
+            
+            
+            {
+                brand: "CHEVROLET",
+                name: "TRACKER LT 1.0",
+                km: "49.219",
+                year: "2023/2024",
+                transmission: "AUTOMÁT.",
+                oldPrice: "R$ 108.000",
+                price: "R$ 105.990",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/Chevrolet Tracker.png",
+                img360: "img/Onix lt1.0 2023/Chevrolet Tracker.png"
+            },
+            
+            {
+                brand: "HYUNDAI",
+                name: "HB20 COMFORT 1.0",
+                km: "39.999",
+                year: "2023/2024",
+                transmission: "MANUAL",
+                oldPrice: "R$ 69.990",
+                price: "R$ 66.990",
+                city: "PALMAS/TO",
+                img: "img/Onix lt1.0 2023/Hb20.png",
+                img360: "img/Onix lt1.0 2023/Hb20.png"
+            }
+        ];
+
+        let compareCars = [];
+
+        function renderCars(list = cars) {
+            const carList = document.getElementById('carList');
+            carList.innerHTML = '';
+            list.forEach((car, idx) => {
+                const div = document.createElement('div');
+                div.className = 'car-item';
+                div.innerHTML = `
+                    <img src="${car.img}" class="car-img" alt="${car.name}" onclick="openModal360('${car.img360}','${car.brand} ${car.name}')" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/aresdevbr/assets/main/no-car.png'">
+                    <button class="car-360-btn" onclick="openModal360('${car.img360}','${car.brand} ${car.name}')">Ver 360°</button>
+                    <div class="car-title">${car.brand} ${car.name}</div>
+                    <div class="car-desc">${car.km} km | ${car.year} | ${car.transmission}</div>
+                    <div class="car-price">
+                        <span class="car-oldprice">${car.oldPrice}</span><br>
+                        <span style="color:#FF9900;font-size:1.3em;font-weight:bold;">${car.price}</span>
+                    </div>
+                    <div style="color:#ccc;font-size:0.95em;margin-bottom:8px;">${car.city}</div>
+                    <button class="buy-btn" onclick="openModal('${car.brand} ${car.name}')">Comprar</button>
+                    <button class="compare-btn" onclick="compareCar('${car.brand} ${car.name}')">Comparar carro</button>
+                `;
+                carList.appendChild(div);
+            });
+        }
+
+        function fillSelect() {
+            const select = document.getElementById('carroEscolhido');
+            select.innerHTML = '<option value="">Selecione o carro</option>';
+            cars.forEach(car => {
+                const opt = document.createElement('option');
+                opt.value = car.brand + " " + car.name;
+                opt.textContent = car.brand + " " + car.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function openModal(carName) {
+            fillSelect();
+            document.getElementById('modalBg').classList.add('active');
+            if (carName) {
+                document.getElementById('carroEscolhido').value = carName;
+            }
+        }
+        function closeModal() {
+            document.getElementById('modalBg').classList.remove('active');
+            document.getElementById('successMsg').style.display = 'none';
+            document.getElementById('buyForm').reset();
+        }
+
+        function openModal360(img360, nome) {
+            document.getElementById('img360').src = img360;
+            document.getElementById('caption360').textContent = nome + " - Visualização 360°";
+            document.getElementById('modal360Bg').classList.add('active');
+        }
+        function closeModal360() {
+            document.getElementById('modal360Bg').classList.remove('active');
+            document.getElementById('img360').src = "";
+            document.getElementById('caption360').textContent = "";
+        }
+
+        function compareCar(carName) {
+            if (!compareCars.includes(carName)) {
+                compareCars.push(carName);
+                updateCompareList();
+            }
+        }
+        function removeCompare(carName) {
+            compareCars = compareCars.filter(c => c !== carName);
+            updateCompareList();
+        }
+        function updateCompareList() {
+            const compareList = document.getElementById('compareList');
+            const compareUl = document.getElementById('compareUl');
+            if (compareCars.length === 0) {
+                compareList.style.display = 'none';
+                return;
+            }
+            compareList.style.display = 'block';
+            compareUl.innerHTML = '';
+            compareCars.forEach(car => {
+                const li = document.createElement('li');
+                li.innerHTML = `${car} <button class="remove-btn" onclick="removeCompare('${car}')">&times;</button>`;
+                compareUl.appendChild(li);
+            });
+        }
+
+        // Filtros dinâmicos
+        function filterCars() {
+            let brand = document.getElementById('brandFilter').value;
+            let price = document.getElementById('priceFilter').value;
+            let search = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = cars.filter(car => {
+                let ok = true;
+                if (brand && car.brand !== brand) ok = false;
+                if (price) {
+                    let p = parseInt(car.price.replace(/\D/g, ''));
+                    if (price == "70000" && p > 70000) ok = false;
+                    if (price == "90000" && (p > 90000 || p <= 70000)) ok = false;
+                    if (price == "120000" && (p > 120000 || p <= 90000)) ok = false;
+                    if (price == "150000" && (p > 150000 || p <= 120000)) ok = false;
+                    if (price == "200000" && (p > 200000 || p <= 150000)) ok = false;
+                    if (price == "999999" && p <= 200000) ok = false;
+                }
+                if (search && !(car.name.toLowerCase().includes(search) || car.brand.toLowerCase().includes(search))) ok = false;
+                return ok;
+            });
+            renderCars(filtered);
+        }
+
+        // Preenche filtro de marcas
+        function fillBrandFilter() {
+            const brands = [...new Set(cars.map(car => car.brand))];
+            const select = document.getElementById('brandFilter');
+            brands.forEach(brand => {
+                const opt = document.createElement('option');
+                opt.value = brand;
+                opt.textContent = brand;
+                select.appendChild(opt);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCars();
+            fillSelect();
+            fillBrandFilter();
+
+            document.getElementById('buyForm').onsubmit = function(e) {
+                e.preventDefault();
+                const nome = document.getElementById('nome').value;
+                const tel = document.getElementById('telefone').value;
+                const carro = document.getElementById('carroEscolhido').value;
+                const texto = `Olá, meu nome é ${nome} e tenho interesse no ${carro}. Meu telefone/WhatsApp: ${tel}`;
+                const numero = '5563981197180';
+                window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, '_blank');
+                document.getElementById('successMsg').style.display = 'block';
+                setTimeout(closeModal, 2500);
+            };
+
+            document.getElementById('modalBg').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            document.getElementById('modal360Bg').addEventListener('click', function(e) {
+                if (e.target === this) closeModal360();
+            });
+
+            document.getElementById('brandFilter').addEventListener('change', filterCars);
+            document.getElementById('priceFilter').addEventListener('change', filterCars);
+            document.getElementById('searchInput').addEventListener('input', filterCars);
+        });
+
+        // Expor funções globais para HTML
+        window.openModal = openModal;
+        window.openModal360 = openModal360;
+        window.compareCar = compareCar;
+        window.removeCompare = removeCompare;
+    </script>
+</body>
+</html>
