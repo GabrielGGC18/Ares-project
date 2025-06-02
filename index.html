@@ -132,13 +132,16 @@
         }
         .team-container {
             display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;
+            
         }
         .team-member {
             background: var(--primary); border-radius: 10px; padding: 30px 20px; text-align: center;
             box-shadow: 0 8px 24px rgba(0,0,0,0.18);
             width: 220px;
             transition: transform .2s;
+           
         }
+        
         .team-member:hover { transform: scale(2.05);}
         .team-member img {
             width: 60px; height: 90px; border-radius: 90%; margin-bottom: 15px; object-fit: cover;
@@ -233,12 +236,9 @@
         }
         .copyright { color: #ccc; font-size: 14px; }
         .ceo { color: var(--secondary); font-weight: 600; margin-top: 10px; }
-        @media (max-width: 900px) {
-            .about { grid-template-columns: 1fr; }
-            .about-img { order: -1; }
-            .team-container { flex-direction: column; align-items: center;}
-        }
-        @media (max-width: 768px) {
+        
+        @media screen and (max-width: 768px) {
+            .nav { flex-direction: column-reverse; align-items: flex-start;}
             .hero h2 { font-size: 36px; }
             .about { grid-template-columns: 1fr; }
             .about-img { order: -1; }
@@ -254,12 +254,23 @@
             transform: rotate(-10deg) scale(1.12);
             filter: drop-shadow(0 0 18px #FF0000cc) saturate(2);
         }
+        
+                
+        /* Animação de hover nos botões */
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+
+        /* Exemplo de uso da classe btn em um elemento */
+        /* <a href="#" class="btn">Clique aqui</a> */
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
-        <div class="logo">
+        <div class= "logo">
             <img src="img/ares-helmet-bg.jpg" alt="Capacete Espartano" style="filter: drop-shadow(0 0 0 #FF0000) saturate(2);">
             <h1>Á<span>res</span></h1>
         </div>
@@ -396,8 +407,9 @@
         <div class="team-container">
             <div class="team-member">
                 <img src="img/eu smarto.png" alt="Gabriel Mendes">
-                <h4>Gabriel Mendes</h4>
+                <h4>Gabriel Mendes </h4>
                 <p>Desenvolvedor de Software</p>
+                <a href="https://www.instagram.com/gabrieldsa_dev/" target="_blank">Instagram</a> 
             </div>
             <div class="team-member">
                 <img src="img/Iuri xavier.jpg" alt="Yuri Paulino Aragão">
@@ -440,10 +452,6 @@
             <div class="tech-item">
                 <img src="https://cdn.worldvectorlogo.com/logos/docker.svg" alt="Docker">
                 <p>Docker</p>
-            </div>
-            <div class="tech-item">
-                <img src="https://cdn.worldvectorlogo.com/logos/hyperledger.svg" alt="Hyperledger">
-                <p>Hyperledger</p>
             </div>
             <div class="tech-item">
                 <img src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
@@ -552,11 +560,11 @@
             <a href="#">Política de Privacidade</a>
         </div>
         <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/aresstartup_ars/"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="https://www.instagram.com/aresstartup_ars/"><i class="fab fa-instagram"></i></a>
+            <a href="https://github.com/GabrielGGC18"><i class="fab fa-github"></i></a>
         </div>
         <div class="copyright">
             <p>&copy; 2025 Áres Tecnologia. Todos os direitos reservados.</p>
